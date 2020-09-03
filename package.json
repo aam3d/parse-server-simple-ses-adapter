@@ -1,10 +1,11 @@
 {
   "name": "parse-server-simple-ses-adapter-with-template",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "Used to send Parse Server password reset and email verification emails though ses, also provides email templates",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "prettier --write index.js"
   },
   "repository": {
     "type": "git",
@@ -18,7 +19,10 @@
   ],
   "author": "Drew Gross",
   "contributors": [
-    {"name":"Jethro Leevers","url":"https://github.com/leevers"}
+    {
+      "name": "Jethro Leevers",
+      "url": "https://github.com/leevers"
+    }
   ],
   "license": "BSD-3-Clause",
   "bugs": {
@@ -28,5 +32,8 @@
   "dependencies": {
     "handlebars": "^4.7.6",
     "node-ses": "3.0.2"
+  },
+  "devDependencies": {
+    "prettier": "^2.1.1"
   }
 }
