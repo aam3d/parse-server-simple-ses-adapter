@@ -67,8 +67,9 @@ var SimpleSESAdapter = (sesOptions) => {
           if (error) {
             reject(error);
           } else {
+            const template = hbs.compile(buffer);
             var mailData = {
-              text: hbs.compile(buffer),
+              text: template(data),
               to: user.get("email") || user.get("username"),
               subject: "Please verify your E-mail with " + appName,
             };
@@ -89,8 +90,9 @@ var SimpleSESAdapter = (sesOptions) => {
           if (error) {
             reject(error);
           } else {
+            const template = hbs.compile(buffer);
             var mailData = {
-              text: hbs.compile(buffer),
+              text: template(data),
               to: user.get("email") || user.get("username"),
               subject: "Reset your password with " + appName,
             };
