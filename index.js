@@ -57,9 +57,9 @@ var SimpleSESAdapter = (sesOptions) => {
   };
 
   const sendVerificationEmail = (data) => {
-    console.log("sendVerificationEmail");
-    console.log(data);
-    console.log(sesOptions);
+    // console.log("sendVerificationEmail");
+    // console.log(data);
+    // console.log(sesOptions);
     const { user, appName } = data;
     return new Promise((resolve, reject) => {
       fs.readFile(
@@ -83,9 +83,9 @@ var SimpleSESAdapter = (sesOptions) => {
   };
 
   const sendPasswordResetEmail = (data) => {
-    console.log("sendPasswordResetEmail");
-    console.log(data);
-    console.log(sesOptions);
+    // console.log("sendPasswordResetEmail");
+    // console.log(data);
+    // console.log(sesOptions);
     const { user, appName } = data;
     return new Promise((resolve, reject) => {
       fs.readFile(
