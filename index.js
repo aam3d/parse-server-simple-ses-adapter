@@ -1,6 +1,7 @@
 var ses = require('node-ses');
 const hbs = require("handlebars");
 const fs = require("fs");
+const path = require("path");
 
 var SimpleSESAdapter = sesOptions => {
 
@@ -49,7 +50,7 @@ var SimpleSESAdapter = sesOptions => {
   const sendVerificationEmail = data => {
     const { user, appName } = data;
     return new Promise((resolve, reject) => {
-      fs.readFile(sesOptions.verificationTemplate, "utf-8", (error, buffer) => {
+      fs.readFile(path.join(__dirname, sesOptions.verificationTemplate), "utf-8", (error, buffer) => {
         if (error) {
           reject(error);
         } else {
@@ -63,7 +64,7 @@ var SimpleSESAdapter = sesOptions => {
   const sendPasswordResetEmail = data => {
       const { user, appName } = data;
       return new Promise((resolve, reject) => {
-        fs.readFile(sesOptions.passwordResetTemplate, "utf-8", (error, buffer) => {
+        fs.readFile(path.join(__dirname,sesOptions.passwordResetTemplate), "utf-8", (error, buffer) => {
           if (error) {
             reject(error);
           } else {
