@@ -1,6 +1,6 @@
 {
   "name": "parse-server-simple-ses-adapter-with-template",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Used to send Parse Server password reset and email verification emails though ses, also provides email templates",
   "main": "index.js",
   "scripts": {

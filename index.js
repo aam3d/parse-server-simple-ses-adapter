@@ -48,14 +48,19 @@ var SimpleSESAdapter = sesOptions => {
   };
   
   const sendVerificationEmail = data => {
+    console.log(data);
     const { user, appName } = data;
     return new Promise((resolve, reject) => {
       fs.readFile(path.join(__dirname, sesOptions.verificationTemplate), "utf-8", (error, buffer) => {
         if (error) {
           reject(error);
         } else {
-          const template = hbs.compile(buffer);
-          resolve(sendMail({to: data.to, subject: data.subject, text: template(data)}));
+          var mailData = {
+            text: hbs.compile(buffer),
+            to: user.get("email") || user.get("username"),
+            subject: "Please verify your E-mail with " + appName,
+          };
+          resolve(sendMail(mailData));
         }
       });
     });
@@ -68,8 +73,12 @@ var SimpleSESAdapter = sesOptions => {
           if (error) {
             reject(error);
           } else {
-            const template = hbs.compile(buffer);
-            resolve(sendMail({to: data.to, subject: data.subject, text: template(data)}));
+            var mailData = {
+              text: hbs.compile(buffer),
+              to: user.get("email") || user.get("username"),
+              subject: "Reset your password with " + appName,
+            };
+            resolve(sendMail(mailData));
           }
         });
       });
