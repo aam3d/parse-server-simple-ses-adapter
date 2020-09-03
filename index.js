@@ -1,4 +1,6 @@
 var ses = require('node-ses');
+const hbs = require("handlebars");
+const fs = require("fs");
 
 var SimpleSESAdapter = sesOptions => {
 
@@ -7,7 +9,15 @@ var SimpleSESAdapter = sesOptions => {
   }
   
   if(!sesOptions.amazon){
-    sesOptions.amazon = 'https://email.us-east-1.amazonaws.com'
+    sesOptions.amazon = 'https://email.us-east-1.amazonaws.com';
+  }
+
+  if(!sesOptions.verificationTemplate){
+    sesOptions.verificationTemplate = './templates/verificationTemplate.html';
+  }
+
+  if(!sesOptions.amazon){
+    sesOptions.passwordResetTemplate = './templates/passwordResetTemplate.html';
   }
   
   var client = ses.createClient({ key: sesOptions.apiKey, secret: sesOptions.apiSecret, amazon : sesOptions.amazon });
@@ -35,9 +45,39 @@ var SimpleSESAdapter = sesOptions => {
       });
     });
   };
+  
+  const sendVerificationEmail = data => {
+    const { user, appName } = data;
+    return new Promise((resolve, reject) => {
+      fs.readFile(sesOptions.verificationTemplate, "utf-8", (error, buffer) => {
+        if (error) {
+          reject(error);
+        } else {
+          const template = hbs.compile(buffer);
+          resolve(sendMail({to: data.to, subject: data.subject, text: template(data)}));
+        }
+      });
+    });
+  }
+  
+  const sendPasswordResetEmail = data => {
+      const { user, appName } = data;
+      return new Promise((resolve, reject) => {
+        fs.readFile(sesOptions.passwordResetTemplate, "utf-8", (error, buffer) => {
+          if (error) {
+            reject(error);
+          } else {
+            const template = hbs.compile(buffer);
+            resolve(sendMail({to: data.to, subject: data.subject, text: template(data)}));
+          }
+        });
+      });
+  }
 
   return Object.freeze({
-    sendMail: sendMail
+    sendMail: sendMail,
+    sendVerificationEmail,
+    sendPasswordResetEmail
   });
 };
 
