@@ -22,7 +22,7 @@ var SimpleSESAdapter = (sesOptions) => {
     sesOptions.verificationTemplate = "./templates/verificationTemplate.html";
   }
 
-  if (!sesOptions.amazon) {
+  if (!sesOptions.passwordResetTemplate) {
     sesOptions.passwordResetTemplate = "./templates/passwordResetTemplate.html";
   }
 
@@ -105,8 +105,8 @@ var SimpleSESAdapter = (sesOptions) => {
 
   return Object.freeze({
     sendMail: sendMail,
-    sendVerificationEmail,
-    sendPasswordResetEmail,
+    sendVerificationEmail: sendVerificationEmail,
+    sendPasswordResetEmail: sendPasswordResetEmail,
   });
 };
 
