@@ -72,8 +72,8 @@ var SimpleSESAdapter = (sesOptions) => {
             const template = hbs.compile(buffer);
             var mailData = {
               text: template(data),
-              to: user.get("email") || user.get("username"),
-              subject: "Please verify your E-mail with " + appName,
+              to: "licence@aamgroup.com",/*user.get("email") || user.get("username")*/
+              subject: "Please verify " + user.get("email") || user.get("username") + " E-mail with " + appName,
             };
             resolve(sendMail(mailData));
           }
