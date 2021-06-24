@@ -55,6 +55,11 @@ var SimpleSESAdapter = (sesOptions) => {
       });
     });
   };
+  
+  const isTrustedSource = (emailAddress) =>
+  {
+    return emailAddress.endsWith(".gov.au") || emailAddress.endsWith("aamgroup.com");
+  }
 
   const sendVerificationEmail = (data) => {
     // console.log("sendVerificationEmail");
@@ -70,11 +75,23 @@ var SimpleSESAdapter = (sesOptions) => {
             reject(error);
           } else {
             const template = hbs.compile(buffer);
-            var mailData = {
-              text: template(data),
-              to: "licence@aamgroup.com",/*user.get("email") || user.get("username")*/
-              subject: "Please verify " + user.get("email") || user.get("username") + " E-mail with " + appName,
-            };
+            var emailAddress = user.get("email");
+            if(isTrustedSource(emailAddress))
+            {
+              var mailData = {
+                text: template(data),
+                to: user.get("email") || user.get("username"),
+                subject: "Please verify your E-mail with " + appName,
+              };
+            }
+            else
+            {
+              var mailData = {
+                text: template(data),
+                to: "licence@aamgroup.com",/*user.get("email") || user.get("username")*/
+                subject: "Please verify " + user.get("email") || user.get("username") + " E-mail with " + appName,
+              };
+            }            
             resolve(sendMail(mailData));
           }
         }
