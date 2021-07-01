@@ -22,6 +22,10 @@ var SimpleSESAdapter = (sesOptions) => {
     sesOptions.verificationTemplate = "./templates/verificationTemplate.html";
   }
 
+  if (!sesOptions.pendingTemplate) {
+    sesOptions.pendingTemplate = "./templates/verificationPendingTemplate.html";
+  }
+
   if (!sesOptions.passwordResetTemplate) {
     sesOptions.passwordResetTemplate = "./templates/passwordResetTemplate.html";
   }
@@ -61,6 +65,33 @@ var SimpleSESAdapter = (sesOptions) => {
     return emailAddress.endsWith(".gov.au") || emailAddress.endsWith("aamgroup.com");
   }
 
+  const sendVerificationPendingEmail = (data) => {
+    // console.log("sendVerificationEmail");
+    // console.log(data);
+    // console.log(sesOptions);
+    const { user, appName } = data;
+    return new Promise((resolve, reject) => {
+      fs.readFile(
+        path.join(__dirname, sesOptions.pendingTemplate),
+        "utf-8",
+        (error, buffer) => {
+          if (error) {
+            reject(error);
+          } else {
+            data.emailAddress = user.get("email") || user.get("username");
+            const template = hbs.compile(buffer);
+            var mailData = {
+              text: template(data),
+              to: user.get("email") || user.get("username"),
+              subject: appName + " Verification Pending",
+            };           
+            resolve(sendMail(mailData));
+          }
+        }
+      );
+    });
+  };
+
   const sendVerificationEmail = (data) => {
     // console.log("sendVerificationEmail");
     // console.log(data);
@@ -83,6 +114,7 @@ var SimpleSESAdapter = (sesOptions) => {
                 to: user.get("email") || user.get("username"),
                 subject: "Please verify your E-mail with " + appName,
               };
+             resolve(sendMail(mailData));
             }
             else
             {
@@ -91,8 +123,11 @@ var SimpleSESAdapter = (sesOptions) => {
                 to: "licence@aamgroup.com",/*user.get("email") || user.get("username")*/
                 subject: "Please verify " + user.get("email") || user.get("username") + " E-mail with " + appName,
               };
-            }            
-            resolve(sendMail(mailData));
+              
+              sendVerificationPendingEmail(data).then( () => {
+                resolve(sendMail(mailData));
+              });
+            }
           }
         }
       );
